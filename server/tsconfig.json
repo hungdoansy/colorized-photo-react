@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "allowJs": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ]
+}
