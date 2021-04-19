@@ -4,6 +4,7 @@
 import React from "react";
 import { useState } from "@hookstate/core";
 import styled from "styled-components";
+import classNames from "classnames";
 
 import AutomaticColorization from "./AutomaticColorization";
 import GuidedColorization from "./GuidedColorization";
@@ -39,12 +40,19 @@ const App = ({ className }) => {
   const Component = currentTab.component;
 
   return (
-    <div className={className}>
+    <div
+      className={classNames(
+        className,
+        "u-widthFull u-heightFull",
+        "u-flex u-flexColumn u-alignItemsCenter",
+        "u-paddingMedium"
+      )}
+    >
       <div className="tabs u-flex u-justifyContentCenter u-alignItemsCenter">
         {Tabs.map((tab) => (
           <div
             key={tab.id}
-            className="tab"
+            className="tab u-roundedMedium u-cursorPointer u-userSelectNone"
             onClick={() => {
               tabState.set(tab.id);
             }}
@@ -62,32 +70,18 @@ const App = ({ className }) => {
 };
 
 export default styled(App)`
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
   row-gap: 30px;
 
-  align-items: center;
-  justify-content: center;
-
   .tabs {
-    display: flex;
     column-gap: 30px;
 
     .tab {
       width: 200px;
       height: 40px;
       line-height: 40px;
+
       border: 1px solid #ecf0f1;
-      border-radius: 8px;
-
-      display: inline-block;
       text-align: center;
-
-      user-select: none;
-      cursor: pointer;
 
       transition: background-color 0.1s linear, color 0.1s linear;
 
