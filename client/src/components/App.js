@@ -34,14 +34,13 @@ const Tabs = [
 ];
 
 const App = ({ className }) => {
-  const tabState = useState(() => Tab.Automatic);
-  console.log("tabState", tabState.get());
+  const tabState = useState(Tab.Automatic);
   const currentTab = Tabs.find(({ id }) => id === tabState.get());
   const Component = currentTab.component;
 
   return (
     <div className={className}>
-      <div className="tabs">
+      <div className="tabs u-flex u-justifyContentCenter u-alignItemsCenter">
         {Tabs.map((tab) => (
           <div
             key={tab.id}
@@ -91,6 +90,8 @@ export default styled(App)`
       cursor: pointer;
 
       transition: background-color 0.1s linear, color 0.1s linear;
+
+      color: #ecf0f1;
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
