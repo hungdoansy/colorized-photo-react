@@ -9,8 +9,9 @@ const PhotoUploader = () => {
   return (
     <div
       className={classNames(
+        "u-widthFull u-heightFull",
+        "u-backgroundTransparent",
         "u-roundedMedium u-border u-borderDashed u-borderSmall u-paddingMedium u-flex u-justifyContentCenter",
-        !dragging && "u-backgroundWhite",
         dragging && !invalid && "u-borderPrimary u-backgroundPrimaryLight",
         dragging && invalid && "u-borderNegative u-backgroundNegativeLight"
       )}
