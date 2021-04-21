@@ -3,9 +3,22 @@ import classNames from "classnames";
 
 import { Button, Form } from "@ahaui/react";
 
-const PhotoUploader = () => {
+const PhotoUploader = ({ onSuccess }) => {
   const dragging = false;
   const invalid = false;
+
+  const onFileChange = (e) => {
+    if (!(e.target.files?.length > 0)) {
+      return;
+    }
+
+    const file = e.target.files[0];
+
+    const localImageUrl = window.URL.createObjectURL(file);
+
+    onSuccess(localImageUrl);
+  };
+
   return (
     <div
       className={classNames(
@@ -43,8 +56,8 @@ const PhotoUploader = () => {
               className="u-hidden"
               type="file"
               id="submissionFile"
-              onChange={() => {}}
-              accept={".csv"}
+              onChange={onFileChange}
+              accept={".jpg,.png,.jpeg"}
               disabled={false}
             />
             {true && (
