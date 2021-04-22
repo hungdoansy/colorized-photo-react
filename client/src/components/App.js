@@ -7,12 +7,10 @@ import styled from "styled-components";
 import classNames from "classnames";
 
 import AutomaticColorization from "./AutomaticColorization";
-import GuidedColorization from "./GuidedColorization";
 import LinksColorization from "./LinksColorization";
 
 const Tab = {
   Automatic: "Automatic Colorization",
-  Guided: "Guided Colorization",
   Links: "Links Colorization",
 };
 
@@ -21,11 +19,6 @@ const Tabs = [
     id: Tab.Automatic,
     title: Tab.Automatic,
     component: AutomaticColorization,
-  },
-  {
-    id: Tab.Guided,
-    title: Tab.Guided,
-    component: GuidedColorization,
   },
   {
     id: Tab.Links,
