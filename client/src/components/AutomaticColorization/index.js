@@ -2,13 +2,11 @@ import React from "react";
 import classNames from "classnames";
 import { useState } from "@hookstate/core";
 
-import globalState from "localStore";
-import { action } from "localStore/photoUrls";
-import PhotoUploader from "components/shared/PhotoUploader";
-// import photo1 from "assets/dummy-photo1.jpeg";
-// import photo2 from "assets/dummy-photo2.jpeg";
+import automaticColorizationStore, { appendPhotoUrl } from "./store";
 
-const PhotoDisplay = ({ photo }) => {
+import PhotoUploader from "components/shared/PhotoUploader";
+
+export const PhotoDisplay = ({ photo }) => {
   return (
     <div
       className="u-widthFull u-flex u-alignItemsCenter"
@@ -41,7 +39,7 @@ const PhotoDisplay = ({ photo }) => {
 };
 
 const AutomaticColorization = () => {
-  const photoUrlsState = useState(globalState.photoUrls);
+  const state = useState(automaticColorizationStore);
 
   return (
     <div
@@ -51,7 +49,7 @@ const AutomaticColorization = () => {
       }}
     >
       <div className="u-widthFull">
-        <PhotoUploader onSuccess={action.appendPhotoUrl} />
+        <PhotoUploader onSuccess={appendPhotoUrl} />
       </div>
 
       <div
@@ -60,8 +58,8 @@ const AutomaticColorization = () => {
           rowGap: "16px",
         }}
       >
-        {photoUrlsState.get().map((url, index) => (
-          <PhotoDisplay key={index} photo={url} />
+        {state.photoUrls.map((url, index) => (
+          <PhotoDisplay key={index} photo={url.get()} />
         ))}
       </div>
     </div>
