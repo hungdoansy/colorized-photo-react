@@ -4,8 +4,8 @@ const automaticColorization = createState({
   photoUrls: [],
 });
 
-const appendPhotoUrl = (url) => {
-  automaticColorization.photoUrls.merge([url]);
+const appendPhotoUrl = (url, filename) => {
+  automaticColorization.photoUrls.merge([{ url, filename }]);
 };
 
 export default automaticColorization;

@@ -34,7 +34,7 @@ app.post("/upload", (req, res) => {
 
   const file = req.files.file;
 
-  file.mv(`../public/uploads/${file.name}`, (err) => {
+  file.mv(`../uploads/${file.name}`, (err) => {
     if (err) {
       console.error(err);
       return res.status(500).send(err);

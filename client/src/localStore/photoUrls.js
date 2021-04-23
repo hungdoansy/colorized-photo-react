@@ -3,10 +3,10 @@ import produce from "immer";
 
 const photoUrls = createState([]);
 
-const appendPhotoUrl = (url) => {
+const appendPhotoUrl = (url, filename) => {
   photoUrls.set((state) =>
     produce(state, (draft) => {
-      draft.push(url);
+      draft.push({ url, filename });
     })
   );
 };

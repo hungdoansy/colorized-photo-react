@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
-
 import { Button, Form } from "@ahaui/react";
 
 const PhotoUploader = ({ onSuccess }) => {
@@ -16,7 +15,7 @@ const PhotoUploader = ({ onSuccess }) => {
 
     const localImageUrl = window.URL.createObjectURL(file);
 
-    onSuccess(localImageUrl);
+    onSuccess(localImageUrl, file.name);
   };
 
   return (
