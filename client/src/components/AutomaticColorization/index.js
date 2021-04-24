@@ -80,7 +80,12 @@ const AutomaticColorization = () => {
         rowGap: "16px",
       }}
     >
-      <div className="u-widthFull">
+      <div
+        className="u-widthFull"
+        style={{
+          height: 200,
+        }}
+      >
         <PhotoUploader onSuccess={appendPhotoUrl} />
       </div>
 
