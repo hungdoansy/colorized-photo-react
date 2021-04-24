@@ -6,24 +6,31 @@ import { useState } from "@hookstate/core";
 import { Icon } from "@ahaui/react";
 import axios from "axios";
 
-import automaticColorizationStore, { appendPhotoUrl } from "./store";
+import automaticColorizationStore, { appendPhotoUrl, getPhotoById, updateColorizedUrlById } from "./store";
 
 import PhotoUploader from "components/shared/PhotoUploader";
 
 const endpoint = "http://localhost:9001";
 
-export const PhotoDisplay = ({ photoUrl, filename }) => {
+export const PhotoDisplay = ({ id }) => {
+  const photo = useState(automaticColorizationStore.photoById[id]).get();
+
   const handleUploadPhotoToRemote = async () => {
-    const blob = await fetch(photoUrl).then((r) => r.blob());
+    const blob = await fetch(photo.originUrl).then((r) => r.blob());
 
     const formData = new FormData();
-    formData.append("file", blob, filename);
+    formData.append("file", blob, photo.filename);
 
-    axios.post(`${endpoint}/upload`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    axios
+      .post(`${endpoint}/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        const colorizedUrl = res.data?.colorizedPhotoUrl;
+        updateColorizedUrlById(id, colorizedUrl);
+      });
   };
 
   return (
@@ -40,7 +47,7 @@ export const PhotoDisplay = ({ photoUrl, filename }) => {
           flexBasis: "100%",
         }}
       >
-        <img alt="dummy" src={photoUrl} style={{ maxWidth: "100%", height: "auto" }} />
+        <img alt="dummy" src={photo.originUrl} style={{ maxWidth: "100%", height: "auto" }} />
       </div>
 
       <div className="u-flexShrink0 u-flexGrow0 u-paddingSmall">
@@ -55,7 +62,9 @@ export const PhotoDisplay = ({ photoUrl, filename }) => {
           flexBasis: "100%",
         }}
       >
-        Image 2
+        {photo.colorizedUrl && (
+          <img alt="dummy" src={photo.colorizedUrl} style={{ maxWidth: "100%", height: "auto" }} />
+        )}
       </div>
     </div>
   );
@@ -81,8 +90,8 @@ const AutomaticColorization = () => {
           rowGap: "16px",
         }}
       >
-        {state.photoUrls.map(({ url, filename }, index) => (
-          <PhotoDisplay key={index} photoUrl={url.get()} filename={filename.get()} />
+        {state.ids.map((id) => (
+          <PhotoDisplay key={id.get()} id={id.get()} />
         ))}
       </div>
     </div>

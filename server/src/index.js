@@ -40,7 +40,7 @@ app.post("/upload", (req, res) => {
       return res.status(500).send(err);
     }
 
-    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+    res.json({ colorizedPhotoUrl: "https://images.unsplash.com/photo-1519865885898-a54a6f2c7eea" });
   });
 });
 
