@@ -42,16 +42,19 @@ const PhotoUploader = ({ onSuccess }) => {
   const [dragging, setDragging] = useState(false);
   const [valid, setValid] = useState(false);
 
+  const handleFile = (file) => {
+    console.log("handleFile");
+    const localImageUrl = window.URL.createObjectURL(file);
+    onSuccess(localImageUrl, file.name);
+  };
+
   const onFileChange = (e) => {
     if (!(e.target.files?.length > 0)) {
       return;
     }
 
     const file = e.target.files[0];
-
-    const localImageUrl = window.URL.createObjectURL(file);
-
-    onSuccess(localImageUrl, file.name);
+    handleFile(file);
   };
 
   const handleDragOver = (e) => {
@@ -63,6 +66,27 @@ const PhotoUploader = ({ onSuccess }) => {
     if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
       const file = e.dataTransfer.items[0];
       setValid(validateFile(file));
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDragging(false);
+    setValid(false);
+
+    console.log("e", e.dataTransfer.files);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+
+      const isValid = validateFile(file);
+      if (isValid) {
+        handleFile(file);
+      }
+
+      e.dataTransfer.clearData();
     }
   };
 
@@ -80,6 +104,7 @@ const PhotoUploader = ({ onSuccess }) => {
       onDragOver={handleDragOver}
       onDragEnd={() => setDragging(false)}
       onDragLeave={() => setDragging(false)}
+      onDrop={handleDrop}
     >
       {dragging && valid && (
         <div className="u-text500 u-fontMedium" data-name="file-name">

@@ -16,3 +16,9 @@ code {
   width: 100vw;
   height: 100vh;
 }
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}

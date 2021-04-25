@@ -28,7 +28,7 @@ const Tabs = [
 ];
 
 const App = ({ className }) => {
-  const tabState = useState(Tab.Automatic);
+  const tabState = useState(Tab.Links);
   const currentTab = Tabs.find(({ id }) => id === tabState.get());
   const Component = currentTab.component;
 

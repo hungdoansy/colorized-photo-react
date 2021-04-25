@@ -30,5 +30,7 @@ module.exports = {
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": 0,
     "no-unused-vars": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
   },
 };

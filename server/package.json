@@ -7,7 +7,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "serve": "nodemon --config nodemon.json src/index.js",
+    "serve": "nodemon --experimental-modules --experimental-json-modules --config nodemon.json src/index.js",
     "build": "gst",
     "lint": "eslint --fix './{src,pages,server}/**/*.{ts,js}' --ignore-path ./.gitignore",
     "format": "prettier --check --write --config .prettierrc.js --ignore-path '.gitignore' '{src,pages,server}/**/*.{ts,js}'"

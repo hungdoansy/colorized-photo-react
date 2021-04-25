@@ -17,7 +17,7 @@ export const PhotoDisplay = ({ id }) => {
 
   const handleUploadPhotoToRemote = async () => {
     const blob = await fetch(photo.originUrl).then((r) => r.blob());
-
+    console.log("blob", blob);
     const formData = new FormData();
     formData.append("file", blob, photo.filename);
 
@@ -27,9 +27,16 @@ export const PhotoDisplay = ({ id }) => {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((res) => {
-        const colorizedUrl = res.data?.colorizedPhotoUrl;
-        updateColorizedUrlById(id, colorizedUrl);
+      .then(async (res) => {
+        const colorizedPhotoString = res.data?.colorizedPhoto;
+
+        const colorizedPhoto = await fetch(colorizedPhotoString).then((r) => r.blob());
+        console.log("colorizedPhoto", colorizedPhoto);
+
+        const colorizedPhotoUrl = window.URL.createObjectURL(colorizedPhoto);
+
+        console.log("colorizedPhoto", colorizedPhoto.slice(0, 10));
+        updateColorizedUrlById(id, colorizedPhotoUrl);
       });
   };
 
