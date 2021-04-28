@@ -82,7 +82,9 @@ app.post('/colorize', (req, res) => {
     colorizedUrl: photo.originUrl + '?grayscale',
   }));
 
-  return res.json(colorizedPhotos);
+  setTimeout(() => {
+    res.json(colorizedPhotos);
+  }, 1000);
 });
 
 app.listen(9001, () => console.log('Server Started...'));
