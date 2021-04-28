@@ -127,9 +127,10 @@ export default styled(Header)`
     }
 
     &[disabled] {
-      background-color: #ebecf0;
-      color: #97a0af;
-      border-color: #ebecf0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: #81868f;
+      user-select: none;
+      color: #81868f;
     }
   }
 `;
