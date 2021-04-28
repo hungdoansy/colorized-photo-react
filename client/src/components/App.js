@@ -33,14 +33,7 @@ const App = ({ className }) => {
   const Component = currentTab.component;
 
   return (
-    <div
-      className={classNames(
-        className,
-        "u-widthFull u-heightFull",
-        "u-flex u-flexColumn u-alignItemsCenter",
-        "u-paddingMedium"
-      )}
-    >
+    <div className={classNames(className, "u-widthFull", "u-flex u-flexColumn u-alignItemsCenter", "u-paddingMedium")}>
       <div className="tabs u-flex u-justifyContentCenter u-alignItemsCenter">
         {Tabs.map((tab) => (
           <div
