@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useHookstate } from "@hookstate/core";
+import classNames from "classnames";
+import { Button, Loader } from "@ahaui/react";
+import styled from "styled-components";
 
 import linksColorizationStore, {
   selectAllPhoto,
@@ -7,12 +11,13 @@ import linksColorizationStore, {
   getSelectedPhotos,
   updateColorizedPhotos,
 } from "components/LinksColorization/store";
-import { useHookstate } from "@hookstate/core";
 
 const endpoint = "http://localhost:9001";
 
-const Header = () => {
+const Header = ({ className }) => {
   const linksColorizationState = useHookstate(linksColorizationStore).get();
+  const [loading, setLoading] = useState(false);
+
   const numberOfSelectedPhotos = linksColorizationState.ids.reduce((sum, id) => {
     return (
       sum + !!(linksColorizationState.photoById[id].selected && !linksColorizationState.photoById[id].colorizedUrl)
@@ -20,8 +25,13 @@ const Header = () => {
   }, 0);
 
   const handleColorizeSelectedPhotos = () => {
+    if (loading || numberOfSelectedPhotos === 0) {
+      return;
+    }
+
     const selectedPhotos = getSelectedPhotos();
 
+    setLoading(true);
     axios
       .post(`${endpoint}/colorize`, selectedPhotos, {
         headers: {
@@ -31,12 +41,16 @@ const Header = () => {
       .then((res) => {
         const colorizedPhotos = res.data;
         updateColorizedPhotos(colorizedPhotos);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoading(false);
       });
   };
 
   return (
     <div
-      className="u-widthFull sticky-header u-paddingVerticalExtraSmall u-paddingTopMedium"
+      className={classNames(className, "u-widthFull sticky-header u-paddingVerticalExtraSmall u-paddingTopMedium")}
       style={{
         background: "#2c3e50",
         height: 110,
@@ -49,20 +63,73 @@ const Header = () => {
           columnGap: 8,
         }}
       >
-        <div onClick={() => selectAllPhoto()} className="custom-button u-roundedMedium">
+        <Button
+          size="small"
+          variant="primary_outline"
+          onClick={selectAllPhoto}
+          disabled={loading}
+          className="custom-button u-text300"
+        >
           Select All
-        </div>
+        </Button>
 
-        <div onClick={() => unselectAllPhoto()} className="custom-button u-roundedMedium">
+        <Button
+          size="small"
+          variant="primary_outline"
+          onClick={unselectAllPhoto}
+          disabled={loading}
+          className="custom-button u-text300"
+        >
           Unselect All
-        </div>
+        </Button>
 
-        <div onClick={handleColorizeSelectedPhotos} className="custom-button u-roundedMedium">
+        <Button
+          size="small"
+          variant="primary_outline"
+          onClick={handleColorizeSelectedPhotos}
+          disabled={loading}
+          className="custom-button u-text300"
+        >
           Colorize Selected (<span>{numberOfSelectedPhotos}</span>)
-        </div>
+        </Button>
+
+        {loading && (
+          <div className="u-flex u-justifyContentCenter u-alignItemsCenter">
+            <Loader size="small" className="u-textNeutral50 u-marginHorizontalExtraSmall" />;
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default Header;
+export default styled(Header)`
+  .custom-button {
+    display: inline-block;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    height: 32px;
+
+    border: 1px solid #ecf0f1;
+    text-align: center;
+
+    transition: background-color 0.1s linear, color 0.1s linear;
+
+    color: #ecf0f1;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #bdc3c7;
+    }
+
+    &[disabled] {
+      background-color: #ebecf0;
+      color: #97a0af;
+      border-color: #ebecf0;
+    }
+  }
+`;
