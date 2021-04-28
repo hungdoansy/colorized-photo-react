@@ -111,10 +111,11 @@ const UrlInput = ({ className }) => {
 export default styled(UrlInput)`
   &[disabled] {
     background-color: rgba(255, 255, 255, 0.1);
+    border-color: #81868f;
     user-select: none;
 
     input {
-      color: #97a0af;
+      color: #81868f;
     }
   }
 `;
