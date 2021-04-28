@@ -74,7 +74,7 @@ const UrlInput = ({ className }) => {
       <Icon
         size="small"
         name="closeCircleOutline"
-        className="u-marginHorizontalExtraSmall u-textWhite hover:u-textGray"
+        className="u-marginHorizontalExtraSmall u-textWhite hover:u-textGray u-cursorPointer"
         onClick={handleClickRemove}
       />
     );
