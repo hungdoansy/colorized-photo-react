@@ -49,9 +49,10 @@ export const PhotoDisplay = ({ id }) => {
       }}
     >
       <div
-        className="u-flexShrink1 u-flexGrow1 u-heightFull u-flex u-alignItemsCenter u-justifyContentCenter u-border"
+        className="u-flexShrink1 u-flexGrow1 u-flex u-alignItemsCenter u-justifyContentCenter u-border"
         style={{
           flexBasis: "100%",
+          alignSelf: "stretch",
         }}
       >
         <img alt="dummy" src={photo.originUrl} style={{ maxWidth: "100%", height: "auto" }} />
@@ -64,9 +65,10 @@ export const PhotoDisplay = ({ id }) => {
       </div>
 
       <div
-        className="u-flexShrink1 u-flexGrow1 u-heightFull u-flex u-alignItemsCenter u-justifyContentCenter u-border"
+        className="u-flexShrink1 u-flexGrow1 u-flex u-alignItemsCenter u-justifyContentCenter u-border"
         style={{
           flexBasis: "100%",
+          alignSelf: "stretch",
         }}
       >
         {photo.colorizedUrl && (
@@ -82,13 +84,13 @@ const AutomaticColorization = () => {
 
   return (
     <div
-      className={classNames("u-widthFull u-heightFull", "u-flex u-flexColumn")}
+      className="u-flex u-flexColumn u-widthFull"
       style={{
         rowGap: "16px",
       }}
     >
       <div
-        className="u-widthFull"
+        className="u-widthFull u-flexShrink0"
         style={{
           height: 200,
         }}
@@ -97,7 +99,7 @@ const AutomaticColorization = () => {
       </div>
 
       <div
-        className="u-widthFull u-flex u-flexColumn"
+        className="u-widthFull u-flex u-flexColumn u-flexGrow1"
         style={{
           rowGap: "16px",
         }}
