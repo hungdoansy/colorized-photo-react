@@ -11,8 +11,7 @@ import linksColorizationStore, {
   getSelectedPhotos,
   updateColorizedPhotos,
 } from "components/LinksColorization/store";
-
-const endpoint = "http://localhost:9001";
+import config from "envConfig";
 
 const Header = ({ className }) => {
   const linksColorizationState = useHookstate(linksColorizationStore).get();
@@ -33,7 +32,7 @@ const Header = ({ className }) => {
 
     setLoading(true);
     axios
-      .post(`${endpoint}/colorize`, selectedPhotos, {
+      .post(`${config.apiUrl}/colorize`, selectedPhotos, {
         headers: {
           "Content-Type": "application/json",
         },

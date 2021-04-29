@@ -1,16 +1,12 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from "react";
-import classNames from "classnames";
 import { useState } from "@hookstate/core";
 import { Icon } from "@ahaui/react";
 import axios from "axios";
 
-import automaticColorizationStore, { appendPhotoUrl, getPhotoById, updateColorizedUrlById } from "./store";
-
 import PhotoUploader from "components/shared/PhotoUploader";
+import config from "envConfig";
 
-const endpoint = "http://localhost:9001";
+import automaticColorizationStore, { appendPhotoUrl, updateColorizedUrlById } from "./store";
 
 export const PhotoDisplay = ({ id }) => {
   const photo = useState(automaticColorizationStore.photoById[id]).get();
@@ -22,7 +18,7 @@ export const PhotoDisplay = ({ id }) => {
     formData.append("file", blob, photo.filename);
 
     axios
-      .post(`${endpoint}/upload`, formData, {
+      .post(`${config.apiUrl}/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

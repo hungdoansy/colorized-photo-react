@@ -7,7 +7,7 @@ import linksColorizationStore, { setUrl, removeUrl, setOriginPhotos } from "./st
 import classNames from "classnames";
 import styled from "styled-components";
 
-const endpoint = "http://localhost:9001";
+import config from "envConfig";
 
 const UrlInput = ({ className }) => {
   const url = useHookstate(linksColorizationStore.url).get();
@@ -27,7 +27,7 @@ const UrlInput = ({ className }) => {
 
     axios
       .post(
-        `${endpoint}/links`,
+        `${config.apiUrl}/links`,
         { test: 1 },
         {
           headers: {
