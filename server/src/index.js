@@ -87,4 +87,31 @@ app.post('/colorize', (req, res) => {
   }, 1000);
 });
 
+app.post('/guided', (req, res) => {
+  if (req.files === null) {
+    return res.status(400).json({ msg: 'No file uploaded' });
+  }
+
+  console.log(req.files);
+  const points = JSON.parse(req.body.points);
+  console.log('points', points);
+
+  const file = req.files.file;
+
+  file.mv(`../uploads/${file.name}`, err => {
+    const index = 1 + Math.round(Math.random());
+
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+
+    setTimeout(() => {
+      res.json({
+        colorizedPhoto: image[index],
+      });
+    }, 2000);
+  });
+});
+
 app.listen(9001, () => console.log('Server Started...'));

@@ -7,10 +7,12 @@ import styled from "styled-components";
 import classNames from "classnames";
 
 import AutomaticColorization from "./AutomaticColorization";
+import GuidedColorization from "./GuidedColorization";
 import LinksColorization from "./LinksColorization";
 
 const Tab = {
   Automatic: "Automatic Colorization",
+  Guided: "Guided Colorization",
   Links: "Links Colorization",
 };
 
@@ -21,6 +23,11 @@ const Tabs = [
     component: AutomaticColorization,
   },
   {
+    id: Tab.Guided,
+    title: Tab.Guided,
+    component: GuidedColorization,
+  },
+  {
     id: Tab.Links,
     title: Tab.Links,
     component: LinksColorization,
@@ -28,7 +35,7 @@ const Tabs = [
 ];
 
 const App = ({ className }) => {
-  const tabState = useState(Tab.Links);
+  const tabState = useState(Tab.Guided);
   const currentTab = Tabs.find(({ id }) => id === tabState.get());
   const Component = currentTab.component;
 
@@ -38,7 +45,10 @@ const App = ({ className }) => {
         {Tabs.map((tab) => (
           <div
             key={tab.id}
-            className="tab u-roundedMedium u-cursorPointer u-userSelectNone"
+            className={classNames(
+              "tab u-roundedMedium u-cursorPointer u-userSelectNone",
+              tab.id === currentTab.id && "tab-active"
+            )}
             onClick={() => {
               tabState.set(tab.id);
             }}
@@ -78,6 +88,10 @@ export default styled(App)`
         color: #bdc3c7;
       }
     }
+  }
+
+  .tab-active {
+    background-color: rgba(255, 255, 255, 0.2);
   }
 
   .content {
