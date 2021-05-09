@@ -43,7 +43,7 @@ const PhotoUploader = ({ onSuccess }) => {
   const [valid, setValid] = useState(false);
 
   const handleFile = (file) => {
-    console.log("handleFile");
+    console.log("here");
     const localImageUrl = window.URL.createObjectURL(file);
     onSuccess(localImageUrl, file.name);
   };
