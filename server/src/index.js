@@ -1,12 +1,12 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
-import bodyParser from 'body-parser';
+import axios from 'axios';
 
 import image from './image.json';
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Add headers
 app.use(function (req, res, next) {
@@ -31,6 +31,20 @@ app.use(function (req, res, next) {
 });
 
 app.use(fileUpload());
+
+// --------------------------------------------------------------------------------------------------------------
+
+const getBase64 = async url => {
+  const response = await axios.get(url, {
+    responseType: 'arraybuffer',
+  });
+
+  const imageType = response.headers['content-type'];
+  const base64 = Buffer.from(response.data, 'binary').toString('base64');
+  const dataURI = `data:${imageType};base64,${base64}`;
+
+  return dataURI;
+};
 
 // Upload Endpoint
 app.post('/upload', (req, res) => {
@@ -88,29 +102,46 @@ app.post('/colorize', (req, res) => {
 });
 
 app.post('/guided', (req, res) => {
+  const name = req.body['image_name'];
+  console.log('/guided', JSON.stringify(req.body));
+
+  getBase64(`https://picsum.photos/${name}`).then(str => {
+    return res.status(200).json({ base64: str });
+  });
+});
+
+app.post('/frames', (req, res) => {
   if (req.files === null) {
     return res.status(400).json({ msg: 'No file uploaded' });
   }
-
   console.log(req.files);
-  const points = JSON.parse(req.body.points);
-  console.log('points', points);
 
-  const file = req.files.file;
+  setTimeout(() => {
+    res.json({
+      session_id: 1,
+      image_names: [
+        'seed/1/380/340',
+        'seed/3/380/280',
+        // 'seed/4/260/300',
+        // 'seed/20/380/320',
+        // 'seed/40/360/320',
+        // 'seed/25/380/260',
+        // 'seed/54/220/260',
+        // 'seed/32/320/300',
+        // 'seed/36/240/360',
+        // 'seed/14/320/240',
+        // 'seed/65/240/300',
+      ],
+    });
+  }, 1000);
+});
 
-  file.mv(`../uploads/${file.name}`, err => {
-    const index = 1 + Math.round(Math.random());
+app.get('/frame', (req, res) => {
+  const { image_name: name, session_id: sessionId } = req.query;
+  console.log({ name, sessionId });
 
-    if (err) {
-      console.error(err);
-      return res.status(500).send(err);
-    }
-
-    setTimeout(() => {
-      res.json({
-        colorizedPhoto: image[index],
-      });
-    }, 2000);
+  getBase64(`https://picsum.photos/${name}?grayscale`).then(str => {
+    return res.status(200).json({ base64: str });
   });
 });
 

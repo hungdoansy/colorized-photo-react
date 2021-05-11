@@ -32,5 +32,15 @@ module.exports = {
     "no-unused-vars": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "jsx-a11y/click-events-have-key-events": 0,
+    "react/self-closing-comp": [
+      "error",
+      {
+        component: true,
+        html: true,
+      },
+    ],
+  },
+  globals: {
+    Promise: "readonly",
   },
 };

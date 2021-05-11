@@ -2,11 +2,12 @@ import React, { useRef, useState } from "react";
 import { useHookstate } from "@hookstate/core";
 import styled from "styled-components";
 
-import guidedColorizationStore, { appendPoint } from "./store";
+import guidedColorizationStore, { appendPoint } from "../store";
 import ColorIndicators from "./ColorIndicators";
 
-const GuidedPhoto = ({ className }) => {
-  const photoUrl = useHookstate(guidedColorizationStore.photo.url).get();
+const Board = ({ className }) => {
+  const selectedFrameId = useHookstate(guidedColorizationStore.selectedFrameId).get();
+  const objectUrl = useHookstate(guidedColorizationStore.frameById[selectedFrameId].objectUrl).get();
 
   const handleMouseUp = (e) => {
     const x = e.nativeEvent.offsetX;
@@ -15,20 +16,16 @@ const GuidedPhoto = ({ className }) => {
     appendPoint(y, x);
   };
 
-  if (!photoUrl) {
-    return null;
-  }
-
   return (
     <div className={className}>
-      <img alt="dummy" src="https://picsum.photos/seed/14/500/400?grayscale" />
+      <img alt="dummy" src={objectUrl} />
       <div className="board" onMouseUp={handleMouseUp} />
       <ColorIndicators />
     </div>
   );
 };
 
-export default styled(GuidedPhoto)`
+export default styled(Board)`
   flex: 0 0 300px;
   display: inline-block;
   position: relative;

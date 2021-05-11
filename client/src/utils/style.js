@@ -11,6 +11,7 @@ export const CustomButtonCSS = css`
 
     border: 1px solid #ecf0f1;
     text-align: center;
+    text-transform: none;
 
     transition: background-color 0.1s linear, color 0.1s linear;
 

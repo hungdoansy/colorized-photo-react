@@ -22,3 +22,7 @@ code {
   top: 0;
   z-index: 100;
 }
+
+.custom-radio .FormCheck-input:checked ~ .FormCheck-label::before {
+  background-color: var(--colorPositive);
+}

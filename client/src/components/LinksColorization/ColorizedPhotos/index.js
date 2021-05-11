@@ -3,9 +3,10 @@ import { useHookstate } from "@hookstate/core";
 import styled from "styled-components";
 import classNames from "classnames";
 
+import PhotoGrid from "components/shared/PhotoGrid";
+
 import Header from "./Header";
 import linksColorizationStore from "../store";
-import PhotoGrid from "../PhotoGrid";
 
 const PhotoWrapper = styled.div`
   display: inline-block;

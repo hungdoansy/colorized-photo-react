@@ -2,10 +2,11 @@ import React, { useCallback } from "react";
 import { useHookstate } from "@hookstate/core";
 import classNames from "classnames";
 
-import Header from "./Header";
 import linksColorizationStore from "components/LinksColorization/store";
+import PhotoGrid from "components/shared/PhotoGrid";
+
+import Header from "./Header";
 import PhotoWrapper from "./PhotoWrapper";
-import PhotoGrid from "../PhotoGrid";
 
 const OriginPhotos = ({ className }) => {
   const ids = useHookstate(linksColorizationStore.ids).get();

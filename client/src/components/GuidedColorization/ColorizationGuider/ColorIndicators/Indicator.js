@@ -3,7 +3,7 @@ import classNames from "classnames";
 import React from "react";
 import styled from "styled-components";
 
-import { highlightPointById, unhighlightPoint } from "../store";
+import { highlightPointById, unhighlightPoint } from "../../store";
 
 const OuterCircleRadius = 10;
 const InnerCircleRadius = 2;

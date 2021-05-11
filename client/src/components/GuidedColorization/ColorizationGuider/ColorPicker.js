@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 
-import { selectColor } from "./store";
+import { selectColor } from "../store";
 
 const ColorPicker = () => {
   const [localSelectedColor, setLocalSelectedColor] = useState({

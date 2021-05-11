@@ -2,7 +2,7 @@ import { useHookstate } from "@hookstate/core";
 import React from "react";
 
 import Indicator from "./Indicator";
-import guidedColorizationStore from "../store";
+import guidedColorizationStore from "../../store";
 
 const ColorIndicators = () => {
   const points = useHookstate(guidedColorizationStore.points).get();

@@ -4,12 +4,20 @@ import axios from "axios";
 
 import config from "envConfig";
 
-const guidedColorization = createState({
-  photo: {},
+const getDefaultState = () => ({
+  photo: {
+    wasSplit: false,
+  },
+  frameById: {},
+  frameIds: [],
   points: [],
   highlightPointId: null,
   selectedColor: "",
+  sessionId: null,
+  selectedFrameId: null,
 });
+
+const guidedColorization = createState(getDefaultState());
 
 const highlightPointById = (id) => {
   guidedColorization.merge({
@@ -55,55 +63,120 @@ const selectColor = (color) => {
 };
 
 const setPhoto = (originUrl, filename) => {
-  guidedColorization.photo.set({
+  guidedColorization.photo.merge({
     url: originUrl,
     filename,
   });
 };
 
 const removePhoto = () => {
-  guidedColorization.merge({
-    photo: {},
-    points: [],
+  guidedColorization.set(getDefaultState());
+};
+
+const setColorizedObjectUrlById = (id, url) => {
+  guidedColorization.frameById[id].merge({ colorizedObjectUrl: url });
+};
+
+const updateFrameById = (id, frameToMerge) => {
+  guidedColorization.frameById[id].merge(frameToMerge);
+};
+
+const selectFrameById = (id) => {
+  guidedColorization.batch((state) => {
+    state.selectedFrameId.set(id);
+    state.points.set([]);
+    state.highlightPointId.set(null);
   });
 };
 
-const setColorizedPhotoUrl = (url) => {
-  guidedColorization.photo.merge({ colorizedUrl: url });
+const getFrameById = async (id) => {
+  const sessionId = guidedColorization.sessionId.get();
+  const frame = guidedColorization.frameById[id].get();
+
+  return axios
+    .get(`${config.apiUrl}/frame?image_name=${frame.name}&session_id=${sessionId}`)
+    .then(async (res) => {
+      const file = res.data.base64;
+
+      const blob = await fetch(file).then((r) => r.blob());
+
+      const objectUrl = window.URL.createObjectURL(blob);
+
+      updateFrameById(id, { objectUrl });
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 };
 
-const uploadPhoto = async () => {
+const getFrames = async () => {
   const photo = guidedColorization.photo.get();
-  const points = guidedColorization.points.get();
+
+  if (photo.wasSplit) {
+    return;
+  }
 
   const blob = await fetch(photo.url).then((r) => r.blob());
   const formData = new FormData();
   formData.append("file", blob, photo.filename);
 
-  formData.append(
-    "points",
-    JSON.stringify(
-      points.map((point) => ({
-        pixel: [point.coords.y, point.coords.x],
-        color: point.color,
-      }))
-    )
-  );
-
   return axios
-    .post(`${config.apiUrl}/guided`, formData, {
+    .post(`${config.apiUrl}/frames`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     })
     .then(async (res) => {
-      const colorizedPhotoString = res.data?.colorizedPhoto;
+      const { session_id: sessionId, image_names: frameNames } = res.data;
 
-      const colorizedPhoto = await fetch(colorizedPhotoString).then((r) => r.blob());
+      guidedColorization.batch((state) => {
+        state.sessionId.set(sessionId);
 
-      const colorizedPhotoUrl = window.URL.createObjectURL(colorizedPhoto);
+        frameNames.forEach((name, index) => {
+          const id = shortId.generate();
+          state.frameById[id].set({
+            name,
+          });
 
-      setColorizedPhotoUrl(colorizedPhotoUrl);
+          state.frameIds[index].set(id);
+        });
+      });
+    })
+    .then(() => {
+      return Promise.all(guidedColorization.frameIds.get().map((id) => getFrameById(id))).then((values) => {
+        console.log(values);
+
+        guidedColorization.photo.wasSplit.set(true);
+      });
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+
+const colorizeFrame = async (id) => {
+  const frame = guidedColorization.frameById[id].get();
+  const sessionId = guidedColorization.sessionId.get();
+
+  const points = guidedColorization.points.get();
+
+  return axios
+    .post(`${config.apiUrl}/guided`, {
+      points: points.map((point) => ({
+        pixel: [point.coords.y, point.coords.x],
+        color: point.color,
+      })),
+      session_id: sessionId,
+      image_name: frame.name,
+    })
+    .then(async (res) => {
+      const base64 = res.data?.base64;
+
+      const blob = await fetch(base64).then((r) => r.blob());
+
+      const colorizedObjectUrl = window.URL.createObjectURL(blob);
+
+      setColorizedObjectUrlById(id, colorizedObjectUrl);
     })
     .catch((e) => {
       console.log(e);
@@ -119,7 +192,10 @@ export {
   setPhoto,
   removePhoto,
   removeAllPoints,
-  uploadPhoto,
+  colorizeFrame,
   highlightPointById,
   unhighlightPoint,
+  getFrames,
+  getFrameById,
+  selectFrameById,
 };
