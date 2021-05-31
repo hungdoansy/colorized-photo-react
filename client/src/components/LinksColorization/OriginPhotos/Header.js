@@ -53,8 +53,10 @@ const Header = ({ className }) => {
     const photoId = linksColorizationState.ids.find((id) => linksColorizationState.photoById[id].selected);
     const photo = linksColorizationState.photoById[photoId];
 
+    const filename = photo.originUrl.split("/").slice(-1)[0];
+
     removePhoto();
-    setPhoto(photo.originUrl, "guided");
+    setPhoto(photo.originUrl, filename);
   };
 
   return (

@@ -116,6 +116,8 @@ const getFrames = async () => {
     return;
   }
 
+  console.log("photo.url", photo.url);
+
   const blob = await fetch(photo.url).then((r) => r.blob());
   const formData = new FormData();
   formData.append("file", blob, photo.filename);

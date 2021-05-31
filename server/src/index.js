@@ -1,12 +1,15 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import axios from 'axios';
+import cors from 'cors';
 
 import image from './image.json';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+app.use('/static', express.static('public'));
 
 // Add headers
 app.use(function (req, res, next) {
@@ -73,17 +76,9 @@ app.post('/upload', (req, res) => {
 app.post('/links', (req, res) => {
   setTimeout(() => {
     res.json([
-      'https://picsum.photos/seed/18/380/340',
-      'https://picsum.photos/seed/17/380/280',
-      'https://picsum.photos/seed/14/260/300',
-      'https://picsum.photos/seed/18/380/320',
-      'https://picsum.photos/seed/17/360/320',
-      'https://picsum.photos/seed/16/380/260',
-      'https://picsum.photos/seed/12/220/260',
-      'https://picsum.photos/seed/16/320/300',
-      'https://picsum.photos/seed/15/240/360',
-      'https://picsum.photos/seed/14/320/240',
-      'https://picsum.photos/seed/14/240/300',
+      'http://localhost:9001/static/image1.jpeg',
+      'http://localhost:9001/static/image2.jpeg',
+      'http://localhost:9001/static/image3.jpeg',
     ]);
   }, 1000);
 });
@@ -103,11 +98,12 @@ app.post('/colorize', (req, res) => {
 
 app.post('/guided', (req, res) => {
   const name = req.body['image_name'];
-  console.log('/guided', JSON.stringify(req.body));
 
-  getBase64(`https://picsum.photos/${name}`).then(str => {
-    return res.status(200).json({ base64: str });
-  });
+  setTimeout(() => {
+    getBase64(`http://localhost:9001/static/${name}`).then(str => {
+      return res.status(200).json({ base64: str });
+    });
+  }, 2000);
 });
 
 app.post('/frames', (req, res) => {
@@ -119,19 +115,7 @@ app.post('/frames', (req, res) => {
   setTimeout(() => {
     res.json({
       session_id: 1,
-      image_names: [
-        'seed/1/380/340',
-        'seed/3/380/280',
-        // 'seed/4/260/300',
-        // 'seed/20/380/320',
-        // 'seed/40/360/320',
-        // 'seed/25/380/260',
-        // 'seed/54/220/260',
-        // 'seed/32/320/300',
-        // 'seed/36/240/360',
-        // 'seed/14/320/240',
-        // 'seed/65/240/300',
-      ],
+      image_names: ['image1.jpeg', 'image2.jpeg'],
     });
   }, 1000);
 });
@@ -140,7 +124,7 @@ app.get('/frame', (req, res) => {
   const { image_name: name, session_id: sessionId } = req.query;
   console.log({ name, sessionId });
 
-  getBase64(`https://picsum.photos/${name}?grayscale`).then(str => {
+  getBase64(`http://localhost:9001/static/${name}`).then(str => {
     return res.status(200).json({ base64: str });
   });
 });
